@@ -1,0 +1,105 @@
+||trial||
+int pi4=48;
+int ena=2;
+int enb=3;
+int m_1=23;
+int m_2=25;
+int m_3=27;
+int m_4=29;
+int IR_1 = 24;  // connect ir sensor module to Arduino pin 1
+int IR_2 = 26;  // connect ir sensor module to Arduino pin 2
+int IR_3 = 28;  // connect ir sensor module to Arduino pin 3
+int trig_Pin=5;
+int echo_Pin=4;
+long Time;
+int distance;
+int pi_4=digitalRead(pi4);
+int main()
+{
+  setup();
+  while(pi_4==1){
+    loop();
+  }
+}
+
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(trig_Pin,OUTPUT);
+  pinMode(echo_Pin,INPUT);
+  Serial.println("Serial Working"); // Test to check if serial is working or not
+  pinMode(IR_1, INPUT); // IR Sensor pin INPUT 1
+  pinMode(IR_2, INPUT); // IR Sensor pin INPUT 2
+  pinMode(IR_3, INPUT); // IR Sensor pin INPUT 3
+  pinMode(pi4,INPUT);
+}
+
+void loop() {
+  while (pi_4== HIGH)
+  {
+    digitalWrite(trig_Pin,LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig_Pin,HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig_Pin,LOW);
+  Time=pulseIn(echo_Pin,HIGH);
+  distance=Time*0.034/2;
+  Serial.print("Distance:");
+  Serial.println(distance);  
+  int sensor_1 = digitalRead(IR_1); // Set the GPIO as Input
+  int sensor_2 = digitalRead(IR_2); // Set the GPIO as Input
+  int sensor_3 = digitalRead(IR_3);// Set the GPIO as Input
+  
+if(distance>15 and pi_4==HIGH)
+{
+  if (sensor_1 == 0 and sensor_3 == 1 and sensor_2 == 1 )// right
+  {
+    digitalWrite(m_1, LOW);
+    digitalWrite(m_2, HIGH);
+    digitalWrite(m_3, HIGH);
+    digitalWrite(m_4, LOW);
+    Serial.println("right"); // print Motion Detected! on the serial monitor window
+  }
+  else if (sensor_2 == 0 and sensor_1 == 1 and sensor_3 == 1)// forward
+  {
+    digitalWrite(m_1, HIGH);
+    digitalWrite(m_2, LOW);
+    digitalWrite(m_3, HIGH);
+    digitalWrite(m_4, LOW);
+    Serial.println("forward"); // print Motion Detected! on the serial monitor window
+  }
+  else if (sensor_3 == 0 and sensor_2 == 1 and sensor_1 == 1) // left
+  {
+    digitalWrite(m_1, LOW);
+    digitalWrite(m_2, HIGH);
+    digitalWrite(m_3, HIGH);
+    digitalWrite(m_4, LOW);
+    Serial.println("left"); // print Motion Detected! on the serial monitor window    
+  }
+  else if (sensor_2 == 0 and sensor_3 == 0 and sensor_1 == 1) // back
+  {
+    digitalWrite(m_1, LOW);
+    digitalWrite(m_2, LOW);
+    digitalWrite(m_3, LOW);
+    digitalWrite(m_4, LOW);
+    Serial.println("back"); // print Motion Detected! on the serial monitor window
+  }
+  else
+  {
+    digitalWrite(m_1, LOW);
+    digitalWrite(m_2, LOW);
+    digitalWrite(m_3, LOW);
+    digitalWrite(m_4, LOW);
+    }
+  }
+else
+{
+  digitalWrite(m_1, LOW);
+  digitalWrite(m_2, LOW);
+  digitalWrite(m_3, LOW);
+  digitalWrite(m_4, LOW);
+  
+}
+
+  }
+}
